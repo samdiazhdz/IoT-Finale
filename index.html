@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="icon" type="image/x-icon" href="./media/faviconZelda.ico">
+    <link rel="stylesheet" type="text/css" href="./CSS/FC.css">
+    <link href="https://fonts.googleapis.com/css2?family=REM:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./raphael-2.1.4.min.js"></script>
+    <script src="./justgage.js"></script>
+
+    <script>
+    var deviceID = "380035000c47343438323536"; 
+    var token = "0ffe75570c5118683591f3f650a98d64fe4a6e75";
+    var urlPorcentaje = "https://api.particle.io/v1/devices/" + deviceID + "/porcentaje";
+    var urlPagina = "https://api.particle.io/v1/devices/" + deviceID + "/pagina";
+
+    var g; // Definir las variables aquí para que estén disponibles en todo el ámbito del script
+
+    // ------------------------------FUNCION PARA LA GRAFICA----------------------------------------------------- 
+    function callback(data, status){
+        if (status == "success") {
+            var temp = parseFloat(data.result);
+            g.refresh(temp);
+            setTimeout(getReading, 3000); // Llama a getReading cada 3 segundos
+        } else {
+            alert("There was a problem");
+        }
+    }
+
+    function getReading(){
+        $.get(urlPorcentaje, {access_token: token}, callback);
+    }
+
+    $(document).ready(function() {
+        g = new JustGage({
+            id: "gauge",
+            value: 0,
+            min: 0,
+            max: 100,
+            title: "Nivel de agua"
+        });
+        getReading();
+    });
+
+    // ------------------------------FUNCION PARA EL BOTON-----------------------------------------------------
+    function controlarBoton(parametro) {
+        // Realizar la solicitud POST al dispositivo Particle
+        fetch(urlPagina, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Bearer ' + token
+            },
+            body: 'arg=' + encodeURIComponent(parametro)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Resultado del control:', data.return_value);
+        })
+        .catch(error => {
+            console.error('Error controlando el control:', error);
+        });
+    }
+
+    // Función para enviar el comando al control cuando se presiona el botón "Alimentar"
+    function prenderBomba() {
+        controlarBoton("on"); // Encender el control
+
+        // Esperar 2 segundos y luego apagar el control
+        setTimeout(function() {
+            controlarBoton("off"); // Apagar el control
+        }, 14500);
+    }
+    </script>
+</head>
+
+<body class="cuerpo">
+    <div class="container">      
+        <div id="titulo" class="titulo"><h1>Nivel de agua en el tinaco</h1></div>  
+        <div id="gauge" class="gauge"></div>
+        <button type="button" id="Aparecer" class="button" onclick="prenderBomba()">Llenar Tinaco</button>
+    </div>
+</body>
+</html>

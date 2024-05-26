@@ -1,0 +1,50 @@
+body.cuerpo {
+	background-image: url("../media/agua5.jpg");
+	background-attachment: fixed;
+	/* Que el fondo no se repita */
+	background-repeat: no-repeat;
+	/* Cambiar el tamaño de fondo */
+	background-size: 100%;
+	width: 95%;
+	/* Margen alrededor del contenido */
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: #f0f0f0;
+
+}
+div.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	border: 1px solid #ccc;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+	margin-bottom: 20px;
+	font-family: "REM";
+	color:black;
+    text-align: center;
+    font-size: 200%;
+}
+div.gauge {
+	width: 400px;
+	height: 360px;
+	margin-bottom: 20px;
+}
+button.button {
+	padding: 10px 20px;
+	text-decoration: none;
+	background-color: #007BFF;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
